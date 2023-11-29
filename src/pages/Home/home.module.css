@@ -1,0 +1,6 @@
+.home{
+  &__sad{
+    color:grey;
+    font-size: calc( var(--scroll) * 1px );
+  }
+}
