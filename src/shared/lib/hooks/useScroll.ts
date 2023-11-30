@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 // ['/', '/about' ...]
 const useScroll = (routes: string[]): void => {
+  const [stopedHook] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -10,8 +11,6 @@ const useScroll = (routes: string[]): void => {
 
   const [scrollState, setScrollState] = useState(0);
   const maxScrollValue = 75;
-
-  console.log(scrollState);
 
   const canNavigateNext =
     scrollState === maxScrollValue &&
@@ -24,6 +23,9 @@ const useScroll = (routes: string[]): void => {
 
   const handleScroll = useCallback(
     (event: WheelEvent): void => {
+      if (stopedHook) {
+        return;
+      }
       // scroll down
       if (event.deltaY >= 0 && scrollState !== maxScrollValue) {
         setScrollState(scrollState + 1);
@@ -48,7 +50,7 @@ const useScroll = (routes: string[]): void => {
         setScrollState(maxScrollValue);
       }
     },
-    [routes, pathIndex],
+    [scrollState, pathIndex],
   );
 
   useEffect(() => {
