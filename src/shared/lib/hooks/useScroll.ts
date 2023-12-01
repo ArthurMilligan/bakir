@@ -3,6 +3,18 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 // ['/', '/about' ...]
 const useScroll = (routes: string[]): void => {
+  const [stopedHook, setStopedHook] = useState(false);
+  const stopHook = (): void => {
+    console.log('stopped');
+
+    setStopedHook(true);
+  };
+  const startHook = (): void => {
+    console.log('strted');
+
+    setStopedHook(false);
+  };
+
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -11,19 +23,15 @@ const useScroll = (routes: string[]): void => {
   const [scrollState, setScrollState] = useState(0);
   const maxScrollValue = 75;
 
-  console.log(scrollState);
-
   const canNavigateNext =
-    scrollState === maxScrollValue &&
-    pathIndex !== -1 &&
-    Boolean(routes[pathIndex + 1]);
-  const canNavigatePrev =
-    scrollState === 0 && pathIndex !== -1 && pathIndex !== 0;
+    scrollState === maxScrollValue && Boolean(routes[pathIndex + 1]);
+  const canNavigatePrev = scrollState === 0 && pathIndex !== 0;
 
   document.documentElement.style.setProperty('--scroll', `${scrollState}`);
 
   const handleScroll = useCallback(
     (event: WheelEvent): void => {
+      console.log('render');
       // scroll down
       if (event.deltaY >= 0 && scrollState !== maxScrollValue) {
         setScrollState(scrollState + 1);
@@ -48,16 +56,24 @@ const useScroll = (routes: string[]): void => {
         setScrollState(maxScrollValue);
       }
     },
-    [routes, pathIndex],
+    [scrollState, pathIndex],
   );
 
   useEffect(() => {
-    document.addEventListener('wheel', handleScroll);
+    if (pathIndex === -1) {
+      stopHook();
+    }
+    if (pathIndex !== -1 && stopedHook) {
+      startHook();
+    }
+    if (!stopedHook) {
+      document.addEventListener('wheel', handleScroll);
+    }
 
     return () => {
       document.removeEventListener('wheel', handleScroll);
     };
-  }, [handleScroll]);
+  }, [handleScroll, stopedHook]);
 };
 
 export default useScroll;
