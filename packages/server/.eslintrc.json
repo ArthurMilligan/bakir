@@ -1,0 +1,113 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "plugins": [
+      "@typescript-eslint",
+      "prettier"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "standard-with-typescript",
+      "airbnb"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        }
+      }
+    },
+
+    "rules": {
+        "no-shadow": "off",
+        "@typescript-eslint/no-misused-promises": "off",
+        "@typescript-eslint/strict-boolean-expressions":"off",
+        "@typescript-eslint/semi":"off",
+        "import/extensions": "off",
+        "@typescript-eslint/comma-dangle": "off",
+        "prettier/prettier": [
+          "error",
+          {
+            "endOfLine": "auto"
+          }
+        ],
+        "padding-line-between-statements": [
+          "error",
+          {
+            "blankLine": "always",
+            "prev": "*",
+            "next": "return"
+          },
+          {
+            "blankLine": "always",
+            "prev": [
+              "const",
+              "let",
+              "var",
+              "import"
+            ],
+            "next": "*"
+          },
+          {
+            "blankLine": "any",
+            "prev": [
+              "const",
+              "let",
+              "var",
+              "import"
+            ],
+            "next": [
+              "const",
+              "let",
+              "var",
+              "import"
+            ]
+          },
+          {
+            "blankLine": "always",
+            "prev": "directive",
+            "next": "*"
+          },
+          {
+            "blankLine": "any",
+            "prev": "directive",
+            "next": "directive"
+          },
+          {
+            "blankLine": "always",
+            "prev": [
+              "case",
+              "default"
+            ],
+            "next": "*"
+          },
+          {
+            "blankLine": "always",
+            "prev": "function",
+            "next": "*"
+          },
+          {
+            "blankLine": "always",
+            "prev": "*",
+            "next": "function"
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/return-await": "off",
+        "@typescript-eslint/member-delimiter-style": "off",
+        "implicit-arrow-linebreak": "off",
+        "@typescript-eslint/no-extraneous-class": "off",
+        "@typescript-eslint/indent":"off",
+        "indent":"off",
+        "no-use-before-define": "off",
+        "object-curly-newline": "off",
+        "@typescript-eslint/no-confusing-void-expression": "off"
+    }
+}
