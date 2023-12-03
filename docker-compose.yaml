@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  server:
+    container_name: server
+    image: server
+    build:
+      context: ./packages/server/
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - "SERVER_PORT=3001"
+      - "POSTGRES_USER=userw"
+      - "POSTGRES_PASSWORD=password_123"
+      - "POSTGRES_DB=bakir_db"
+      - "POSTGRES_PORT=5432"
+      - "POSTGRES_HOST=db"
+    networks:
+      - bakir
+
+  db:
+    container_name: bakir_database
+    image: postgres
+    ports:
+      - "3010:5432"
+    restart: always
+    environment:
+      - "POSTGRES_USER=userw"
+      - "POSTGRES_PASSWORD=password_123"
+      - "POSTGRES_DB=bakir_db"
+    networks:
+      - bakir
+
+networks:
+    bakir:
+        driver: bridge 

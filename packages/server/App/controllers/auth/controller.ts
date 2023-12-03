@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { UserService } from '../db/services';
+import { AuthService } from '../../db/services';
 
 const secretKey = 'secret_key';
 
@@ -18,7 +18,7 @@ class AuthAPI {
       if (!reqLogin || !reqPassword) {
         throw new Error('Необходимо заполнить логин и пароль');
       }
-      const user = await UserService.findByLogin(reqLogin);
+      const user = await AuthService.findByLogin(reqLogin);
 
       if (user === null) {
         throw new Error('Пользователь не найден');
@@ -35,7 +35,7 @@ class AuthAPI {
           expiresIn: '1d',
         });
 
-        void UserService.updateToken({ id, token: refreshToken });
+        void AuthService.updateToken({ id, token: refreshToken });
 
         response
           .cookie('accessToken', accessToken, {
@@ -66,19 +66,66 @@ class AuthAPI {
     response: Response,
   ): Promise<Response<any, Record<string, any>>> => {
     try {
-      console.log(request?.body?.user);
       const id = request?.body?.user?.id;
 
       if (!id) {
         throw new Error('Пользователь не найден');
       }
-      void UserService.updateToken({ id, token: '' });
+      void AuthService.updateToken({ id, token: '' });
 
       return response
         .cookie('accessToken', '', { httpOnly: true })
         .cookie('refreshToken', '', { httpOnly: true })
         .status(200)
         .send('logouted');
+    } catch (error) {
+      console.info(error);
+
+      return response.status(400).send((error as Error).message);
+    }
+  };
+
+  public static register = async (
+    request: Request,
+    response: Response,
+  ): Promise<Response<any, Record<string, any>>> => {
+    try {
+      const { login, password } = request.body;
+
+      if (!login || !password) {
+        throw new Error('Необходимо заполнить логин и пароль');
+      }
+
+      const user = await AuthService.create({
+        login,
+        password,
+        token: '',
+      });
+
+      const id = user.get();
+
+      if (!id) {
+        throw new Error('Ошибка регистрации');
+      }
+
+      const accessToken = jwt.sign({ id, login }, secretKey, {
+        expiresIn: '1h',
+      });
+      const refreshToken = jwt.sign({ id, login }, secretKey, {
+        expiresIn: '1d',
+      });
+
+      return response
+        .cookie('accessToken', accessToken, {
+          maxAge: 3600,
+          httpOnly: true,
+        })
+        .cookie('refreshToken', refreshToken, {
+          httpOnly: true,
+          maxAge: 86400,
+        })
+        .status(200)
+        .send('Регистрация успешна');
     } catch (error) {
       console.info(error);
 

@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/server.js",
     "dev": "nodemon server.ts"
   },
   "author": "ArthurMilligan <Arthurs152@icloud.com>",

@@ -1,16 +1,16 @@
 import { Sequelize } from 'sequelize-typescript';
-import dbConfig from '../config/db.config';
 import Models from './models';
 
 export { newsJoiSchema, newsSchema } from './models';
+export { authLoginJoiSchema, authLoginSchema } from './models';
 
 const sequelize = new Sequelize({
-  database: dbConfig.DB,
+  database: process.env.POSTGRES_DB as string,
   dialect: 'postgres',
-  username: dbConfig.USER,
-  password: dbConfig.PASSWORD,
-  host: dbConfig.HOST,
-  port: dbConfig.PORT,
+  username: process.env.POSTGRES_USER as string,
+  password: process.env.POSTGRES_PASSWORD as string,
+  host: process.env.POSTGRES_HOST as string,
+  port: Number(process.env.POSTGRES_PORT),
 });
 
 sequelize.addModels(Models);

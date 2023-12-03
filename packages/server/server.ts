@@ -4,15 +4,15 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import swaggerUI from 'swagger-ui-express';
 import db from './App/db';
-import router, { swNewsRoute } from './App/routes';
+import router, { swNewsRoute, swAuthRoute } from './App/routes';
 import { auth } from './App/middlewares';
 
 const swagger = {
   openapi: '3.0.0',
   info: {
-    title: 'Express API for Dangle',
+    title: 'interactiver API docs for BAKIR project',
     version: '1.0.0',
-    description: 'The REST API for Dangle Panel service',
+    description: 'The REST API for BAKIR project',
   },
   servers: [
     {
@@ -22,13 +22,13 @@ const swagger = {
   ],
   paths: {
     ...swNewsRoute,
+    ...swAuthRoute,
   },
 };
-
 const app = express();
 
 const corsOptions = {
-  origin: 'http://localhost:8081',
+  origin: 'http://localhost:3001',
 };
 
 db.sequelize.sync().then(() => {
@@ -37,30 +37,24 @@ db.sequelize.sync().then(() => {
 
 app.use(cors(corsOptions));
 
-// parse requests of content-type - application/json
 app.use(bodyParser.json());
 
 app.use(cookieParser());
 
-// parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(router);
 
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swagger));
 
-// simple route
 app.get('/', (_req, res) => {
-  res.json({ message: 'Welcome to bezkoder application.' });
+  res.json({ message: 'Welcome to bakirBack.' });
 });
 
 app.get('/protected', auth, (req, res) => {
   res.send('Welcome to the protected route');
 });
 
-// set port, listen for requests
-const PORT = 8084;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+app.listen(process.env.SERVER_PORT, () => {
+  console.log(`Server is running on port ${process.env.SERVER_PORT}.`);
 });

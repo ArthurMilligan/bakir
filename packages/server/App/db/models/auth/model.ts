@@ -1,13 +1,13 @@
 import { Table, Model, Column, DataType } from 'sequelize-typescript';
 
-export interface IUserAttributes {
+export interface IAuthAttributes {
   login: string;
   password: string;
   token: string;
 }
 
-@Table({ tableName: 'user' })
-class User extends Model<User, IUserAttributes> {
+@Table({ tableName: 'auth' })
+class Auth extends Model<Auth, IAuthAttributes> {
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -36,4 +36,4 @@ class User extends Model<User, IUserAttributes> {
   token: string;
 }
 
-export default User;
+export default Auth;
