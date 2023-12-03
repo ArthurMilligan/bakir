@@ -1,16 +1,16 @@
-import { User, type IUserAttributes } from '../models';
+import { Auth, type IAuthAttributes } from '../models';
 
-type TUserAttributesWithId = IUserAttributes & { id: number };
+type TAuthAttributesWithId = IAuthAttributes & { id: number };
 
-class UserService {
-  public static create = async (data: IUserAttributes): Promise<any> =>
-    User.create(data);
+class AuthService {
+  public static create = async (data: IAuthAttributes): Promise<any> =>
+    Auth.create(data);
 
   public static update = async ({
     id,
     ...data
-  }: TUserAttributesWithId): Promise<any> =>
-    User.update(data, {
+  }: TAuthAttributesWithId): Promise<any> =>
+    Auth.update(data, {
       where: {
         id,
       },
@@ -23,7 +23,7 @@ class UserService {
     id: number;
     token: string;
   }): Promise<any> =>
-    User.update(
+    Auth.update(
       { token },
       {
         where: {
@@ -33,13 +33,13 @@ class UserService {
     );
 
   public static findById = async (id: number): Promise<any> =>
-    User.findByPk(id);
+    Auth.findByPk(id);
 
   public static findByLogin = async (login: string): Promise<any> =>
-    User.findOne({ where: { login } });
+    Auth.findOne({ where: { login } });
 
   public static deleteById = async (id: number): Promise<any> =>
-    User.destroy({ where: { id } });
+    Auth.destroy({ where: { id } });
 }
 
-export default UserService;
+export default AuthService;

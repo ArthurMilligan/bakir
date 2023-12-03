@@ -9,7 +9,7 @@ const auth = (
   res: Response,
   next: NextFunction,
 ): any => {
-  const accessToken = req?.headers?.authorization;
+  const accessToken = req?.cookies?.authorization;
   const refreshToken = req?.cookies?.refreshToken;
 
   if (!accessToken && !refreshToken) {
@@ -29,16 +29,20 @@ const auth = (
       throw new Error('accessToken is not valid');
     }
   } catch (error) {
+    console.info(error);
     if (!refreshToken) {
       return res.status(401).send('Access Denied. No refresh token provided.');
     }
 
     try {
       const decoded = jwt.verify(refreshToken, secretKey);
-      const accessToken = jwt.sign(decoded, secretKey, {
+      const { iat, exp, ...meta } = decoded as any;
+
+      const accessToken = jwt.sign(meta, secretKey, {
         expiresIn: '1h',
       });
 
+      console.log(meta);
       res
         .cookie('accessToken', accessToken, {
           maxAge: 3600,
@@ -49,9 +53,13 @@ const auth = (
           maxAge: 86400,
         });
 
+      req.body.user = meta;
+
       next();
     } catch (error) {
-      return res.status(400).send('Invalid Token.');
+      console.info(error);
+
+      return res.status(400).send((error as Error).message);
     }
   }
 

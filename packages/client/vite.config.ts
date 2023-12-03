@@ -8,6 +8,9 @@ export default defineConfig({
   css:{
     preprocessorOptions: null
   },
+  server:{
+    port: Number(process.env.CLIENT_PORT) || 5173
+  },
   resolve: {
     alias: {
       'pages': path.resolve('src/pages'),

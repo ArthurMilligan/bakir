@@ -2,30 +2,21 @@ import { newsSchema } from '../../db';
 
 const newsSwagger = {
   get: {
-    summary: 'update the user info',
-    tags: ['login'],
-    parameters: [
-      {
-        name: 'key',
-        in: 'header',
-        schema: {
-          type: 'string',
-        },
-        required: true,
-      },
-    ],
-    requestBody: {
-      content: {
-        'application/json': {
-          schema: {
-            ...newsSchema,
-          },
-        },
-      },
-    },
+    'x-swagger-router-controller': 'news',
+    summary: 'get news list',
+    tags: ['news'],
+    parameters: [],
     responses: {
       200: {
         description: 'Done',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: newsSchema,
+            },
+          },
+        },
       },
       default: {
         description: 'Error message',

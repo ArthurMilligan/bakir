@@ -10,3 +10,4 @@ AuthRoutes(router);
 export default router;
 
 export { swNewsRoute } from './NewsRouter';
+export { swAuthRoute } from './AuthRouter';
